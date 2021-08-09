@@ -49,9 +49,6 @@ app.get('/test', (request, response) => {
 
 //============================== Mongo DB ================================//
 
-// seedUsersCollection();
-
-
 app.get('/books', seedUsersCollection);
 
 (request,response) => {
