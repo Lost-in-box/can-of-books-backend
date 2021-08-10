@@ -48,9 +48,8 @@ app.get('/test', (request, response) => {
 
 //============================== Mongo DB ================================//
 
-app.get('/books', seedUsersCollection);
-
-(request,response) => {
+seedUsersCollection();
+async function booksHandler(request, response) {
   let email = request.query.email;
 
   User.find({ email : email },(err,user) =>{
@@ -58,10 +57,12 @@ app.get('/books', seedUsersCollection);
     if(err){ console.log('Something Wrong');
     }
     else{
-      response.json(user[0].books);
+      response.json(user);
     }
 
   });
-};
+}
+
+app.get('/books', booksHandler);
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
