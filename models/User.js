@@ -13,28 +13,28 @@ const User = mongoose.model('books', bestBookSchema);
 const seedUsersCollection = () => {
   try {
 
-    let bookOne = new User({
+    let userOne = new User({
 
       email: 'md20.harb21@gmail.com',
       books: [
         {
-          name: 'Nineteen Eighty-Four',
+          title: 'Nineteen Eighty-Four',
           description: 'The story takes place in an imagined future, the year 1984, when much of the world has fallen victim to perpetual war, omnipresent government surveillance, historical negationism, and propaganda.',
           status: 'true'
         },
         {
-          name: 'War and Peace',
+          title: 'War and Peace',
           description: `focuses on Napoleon's invasion of Russia in 1812`,
           status: 'true'
         },
         {
-          name: 'Crime and Punishmen',
+          title: 'Crime and Punishmen',
           description: 'focuses on the mental anguish and moral dilemmas of Rodion Raskolnikov, an impoverished ex-student in Saint Petersburg who formulates a plan to kill an unscrupulous pawnbroker for her money.',
           status: 'true'
         }
       ]
     });
-    bookOne.save();
+    userOne.save();
 
   } catch (error) {
     console.log('Error while creating the user: ', error.message);

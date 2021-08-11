@@ -16,6 +16,7 @@ const MONGO_DB_URL = process.env.MONGO_DB_URL;
 const { seedUsersCollection } = require('./models/User');
 const {User} = require('./models/User');
 
+app.use(express.json());
 app.use(cors());
 
 mongoose.connect(`${MONGO_DB_URL}/books`, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -46,23 +47,60 @@ app.get('/test', (request, response) => {
   });
 });
 
-//============================== Mongo DB ================================//
+//============================== Mongo DB => GET Method ================================//
 
-seedUsersCollection();
-async function booksHandler(request, response) {
+// seedUsersCollection();
+
+let booksHandler = async (request, response) => {
   let email = request.query.email;
 
-  User.find({ email : email },(err,user) =>{
+  User.findOne({ email : email },(err,user) =>{
 
     if(err){ console.log('Something Wrong');
     }
     else{
-      response.json(user);
+      response.json(user.books);
     }
 
   });
-}
+};
 
 app.get('/books', booksHandler);
+
+//============================== Mongo DB => POST Method ================================//
+
+let createBook = async (request, response) => {
+
+  let {
+
+    title,
+    description,
+    status
+  } = request.body;
+
+  let newBookObj = new User({
+
+    title,
+    description,
+    status
+  });
+  newBookObj.save();
+
+  response.json(newBookObj);
+};
+
+app.post('/books', createBook);
+
+// ================================== Mongo DB => DELETE Method ==================================== //
+
+let deleteBook = async (request, response) => {
+  let bookId = request.params.books_id;
+
+  User.deleteOne({ _id: bookId }, (error, deleted) => {
+    response.send(deleted);
+  });
+};
+
+app.delete('/books/:books_id', deleteBook);
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
