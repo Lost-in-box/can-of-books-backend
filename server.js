@@ -14,7 +14,7 @@ const JWKSURI = process.env.JWKSURI;
 const MONGO_DB_URL = process.env.MONGO_DB_URL;
 
 const { seedUsersCollection } = require('./models/User');
-const {User} = require('./models/User');
+const { User } = require('./models/User');
 
 app.use(express.json());
 app.use(cors());
@@ -40,7 +40,7 @@ app.get('/test', (request, response) => {
   jwt.verify(token, getKey, {}, (error, user) => {
     if (error) {
       response.send('invalid token');
-    } else{
+    } else {
       response.json(user);
     }
 
@@ -54,11 +54,12 @@ app.get('/test', (request, response) => {
 let booksHandler = async (request, response) => {
   let email = request.query.email;
 
-  User.findOne({ email : email },(err,user) =>{
+  User.findOne({ email: email }, (err, user) => {
 
-    if(err){ console.log('Something Wrong');
+    if (err) {
+      console.log('Something Wrong');
     }
-    else{
+    else {
       response.json(user.books);
     }
 
@@ -72,14 +73,12 @@ app.get('/books', booksHandler);
 let createBook = async (request, response) => {
 
   let {
-
     title,
     description,
     status
   } = request.body;
 
   let newBookObj = new User({
-
     title,
     description,
     status
@@ -103,4 +102,35 @@ let deleteBook = async (request, response) => {
 
 app.delete('/books/:books_id', deleteBook);
 
+//===================================== Mongo DB => PUT Method =====================================//
+
+const updateBook = async (request, response) => {
+
+  const bookId = request.params.books_id;
+
+  const {
+    title,
+    description,
+    status
+  } = request.body;
+
+  User.findByIdAndUpdate(
+    { _id: bookId },
+    {
+      title,
+      description,
+      status
+    },
+    { new: true },
+    (err, data) => {
+      response.json(data);
+    }
+  );
+
+};
+
+app.put('/books/:books_id', updateBook);
+
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+
+
